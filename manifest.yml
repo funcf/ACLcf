@@ -1,7 +1,4 @@
 ---
-# See manifest.yml documentation available at:
-# https://docs.developer.swisscom.com/devguide/deploy-apps/manifest.html
-
 applications:
 - name: acl
   memory: 64M
