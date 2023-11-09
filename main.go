@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"crypto/tls"
 	"log"
 	"net"
@@ -46,17 +45,9 @@ func NewProxy() *Proxy {
 	}
 	skipSSL, _ := strconv.ParseBool(skipSSLEnvValue)
 
-	// get list fo allowed IPs
-	file, err := os.Open("ip-whitelist.conf")
-	if err != nil {
-		log.Fatalf("failed to open file: %s", err)
-	}
-	allowedIPs := make([]string, 0)
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		allowedIPs = append(allowedIPs, strings.TrimSpace(scanner.Text()))
-	}
-	file.Close()
+	// get list fo allowed IPs from ALLOWED_IPS env var
+	allowedIPsString := os.Getenv("ALLOWED_IPS")
+	allowedIPs := strings.SplitN(allowedIPsString, ",", -1)
 
 	return &Proxy{
 		SkipSSLValidation: skipSSL,
