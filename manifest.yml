@@ -3,15 +3,11 @@
 # https://docs.developer.swisscom.com/devguide/deploy-apps/manifest.html
 
 applications:
-- name: ip-whitelisting-route-service-demo-app
+- name: acl
   memory: 64M
   disk_quota: 64M
   instances: 1
   health-check-type: port
-
-  routes:
-  - route: ip-whitelisting-demo.scapp.swisscom.com
-  # - route: ip-whitelisting-demo.scapp.io
 
   buildpacks:
   - go_buildpack
