@@ -1,29 +1,25 @@
-# ip-whitelisting-route-service-demo-app
-A demo app for an IP whitelisting route service in Cloud Foundry
+# ACLcf
+IP whitelisting route service app for Cloud Foundry
 
 ### How to use
 
 ```bash
-# edit IP whitelist, can contain single IPs or whole subnet ranges
-vim ip-whitelist.conf
+# create app as a precondition to set the whitelist
+cf create-app acl
+
+# edit IP whitelist, can contain single IPs or whole subnet ranges, separated by comma
+cf set-env acl "1.1.1.1,8.8.8.8"
 
 # push this app
-cf push route-service-demo
+git clone https://github.com/funcf/ACLcf.git && cd ACLcf
+cf push acl
 
-# create a route service with this app
-# https://docs.developer.swisscom.com/services/route-services.html#user-provided
-cf create-user-provided-service route-service-demo -r https://ip-whitelisting-demo.scapp.swisscom.com
-
-# check route service if it's there
-cf service route-service-demo
+# create a route service with this app where "example.com" is the shared public CF domain
+cf create-user-provided-service acl-checker -r https://acl.example.com
 
 # bind the new route service to any of your other apps you want to protect
-# https://docs.developer.swisscom.com/devguide/services/route-binding.html
-cf bind-route-service scapp.swisscom.com route-service-demo --hostname my-other-app-to-be-protected
-
-# check route if it's there
-cf routes | grep my-other-app-to-be-protected
+cf bind-route-service example.com --hostname my-other-app-to-be-protected acl-checker
 ```
 
 ### Guide 
-See https://blog.jamesclonk.io/posts/ip-whitelisting-with-a-route-service/ for a more detailed explanation.
+See https://docs.cloudfoundry.org/services/route-services.html#user-provided for a more detailed explanation.
