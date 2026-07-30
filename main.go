@@ -110,16 +110,16 @@ func (p *Proxy) ReverseProxy(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	// setup a reverse proxy and forward the original request to the target
-		proxy := httputil.NewSingleHostReverseProxy(target)
-        proxy.Transport = &http.Transport{
-                TLSClientConfig: &tls.Config{InsecureSkipVerify: p.SkipSSLValidation},
-        }
+	proxy := httputil.NewSingleHostReverseProxy(target)
+	proxy.Transport = &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: p.SkipSSLValidation},
+	}
 
-        proxy.Director = func(outReq *http.Request) {
-                outReq.URL = target
-                outReq.Host = target.Host
-                outReq.Header = req.Header
-        }
+	proxy.Director = func(outReq *http.Request) {
+			outReq.URL = target
+			outReq.Host = target.Host
+			outReq.Header = req.Header
+	}
 
-        proxy.ServeHTTP(rw, req)
+	proxy.ServeHTTP(rw, req)
 }
